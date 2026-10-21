@@ -1,0 +1,5 @@
+let context,master,notes=[],started=0;
+const melody=[0,4,7,12,7,4,2,5,9,12,9,5,4,7,11,14,12,7,4,0,2,5,9,7,4,2,0];
+export function startMusic(){stopMusic();const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return false;context=new AC();master=context.createGain();master.gain.value=.13;master.connect(context.destination);started=context.currentTime+.04;melody.forEach((n,i)=>{let at=started+i*.52,osc=context.createOscillator(),gain=context.createGain();osc.type='sine';osc.frequency.value=261.63*Math.pow(2,n/12);gain.gain.setValueAtTime(0,at);gain.gain.linearRampToValueAtTime(.32,at+.025);gain.gain.exponentialRampToValueAtTime(.001,at+.48);osc.connect(gain).connect(master);osc.start(at);osc.stop(at+.5);notes.push(osc)});return true}
+export function duckMusic(on){if(master&&context)master.gain.setTargetAtTime(on?.032:.13,context.currentTime,.08)}
+export function stopMusic(){notes.forEach(n=>{try{n.stop()}catch{}});notes=[];if(context){const old=context;context=null;old.close().catch(()=>{})}master=null}
