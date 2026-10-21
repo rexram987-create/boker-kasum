@@ -1,7 +1,7 @@
 import './style.css';
 import {startMusic,stopMusic,duckMusic} from './music.js';
 const canvas=document.querySelector('#scene'),ctx=canvas.getContext('2d'),status=document.querySelector('#status');
-const W=360,H=640;let speechTimer=null;
+let speechTimer=null;
 function stopAudio(){clearTimeout(speechTimer);window.speechSynthesis?.cancel();stopMusic()}
 function speakGreeting(){if(!('speechSynthesis' in window)){status.textContent='הקראה אינה נתמכת בדפדפן';return}const u=new SpeechSynthesisUtterance('בוקר טוב ויום נפלא');u.lang='he-IL';u.rate=1;const voices=speechSynthesis.getVoices();u.voice=voices.find(v=>v.lang.toLowerCase().startsWith('he'))||null;u.onstart=()=>duckMusic(true);u.onend=()=>duckMusic(false);u.onerror=()=>duckMusic(false);speechSynthesis.speak(u)}
 const W=360,H=640;let playing=false,start=0,elapsed=0,frame=0;
