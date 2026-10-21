@@ -21,13 +21,13 @@ function note(n,at,dur=.27,vol=.13){
  tone(f,at,dur,vol,'sine');
  tone(f*2,at,dur*.65,vol*.23,'triangle');
 }
-export function startMusic(){
+export function startMusic(recordDestination=null){
  stopMusic();
  const AC=window.AudioContext||window.webkitAudio;
  const AudioClass=window.AudioContext||window.webkitAudioContext;
  if(!AudioClass)return false;
  ctx=new AudioClass();ctx.resume().catch(()=>{});
- master=ctx.createGain();master.gain.value=.72;master.connect(ctx.destination);
+ master=ctx.createGain();master.gain.value=.72;master.connect(ctx.destination);if(recordDestination){const output=ctx.createMediaStreamDestination();master.connect(output);recordDestination(output.stream)}
  const start=ctx.currentTime+.05;
  tune.forEach(([beat,n],i)=>note(n,start+beat*BEAT, i%4===3?.38:.25, .12));
  // A buoyant waltz-like accompaniment and soft ticking percussion.
